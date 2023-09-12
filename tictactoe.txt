@@ -1,0 +1,84 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class TicTacToe extends JFrame {
+    private JButton[] buttons;
+    private boolean isXNext = true;
+
+    public TicTacToe() {
+        setTitle("Tic Tac Toe");
+        setSize(300, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new GridLayout(3, 3));
+
+        buttons = new JButton[9];
+
+        for (int i = 0; i < 9; i++) {
+            buttons[i] = new JButton("");
+            buttons[i].setFont(new Font("Arial", Font.PLAIN, 48));
+            buttons[i].setFocusPainted(false);
+            final int index = i;
+            buttons[i].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (buttons[index].getText().equals("")) {
+                        if (isXNext) {
+                            buttons[index].setText("X");
+                        } else {
+                            buttons[index].setText("O");
+                        }
+                        isXNext = !isXNext;
+                        checkWin();
+                    }
+                }
+            });
+            add(buttons[i]);
+        }
+    }
+
+    private void checkWin() {
+        // Check for a win condition here and update the game state.
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                TicTacToe game = new TicTacToe();
+                game.setVisible(true);
+                game.playGame();
+            }
+        });
+    }
+
+    private void playGame() {
+        int moves = 0;
+        while (moves < 9) {
+            String input = JOptionPane.showInputDialog("Enter a cell number (1-9):");
+            try {
+                int cellNumber = Integer.parseInt(input);
+                if (cellNumber >= 1 && cellNumber <= 9) {
+                    int index = cellNumber - 1;
+                    if (buttons[index].getText().equals("")) {
+                        if (isXNext) {
+                            buttons[index].setText("X");
+                        } else {
+                            buttons[index].setText("O");
+                        }
+                        isXNext = !isXNext;
+                        checkWin();
+                        moves++;
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Cell already occupied. Try again.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Invalid input. Enter a number between 1 and 9.");
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Invalid input. Enter a valid number.");
+            }
+        }
+        JOptionPane.showMessageDialog(this, "The game is a draw.");
+    }
+}
